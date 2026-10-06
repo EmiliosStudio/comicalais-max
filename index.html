@@ -205,8 +205,8 @@ main.noHero{padding-top:110px}
       age: r.age ?? r.edad ?? '',
       duration: r.duration ?? r.duracion ?? r.duración ?? '',
       cat: catVal,
-      isIA: r.ia === true || r.ia === 'true' || isIaCategory,
-      feat: r.destacado === true || r.destacado === 'true' || r.featured === true,
+      isIA: r.ia === true || String(r.ia).toLowerCase() === 'true' || isIaCategory,
+      feat: r.destacado === true || String(r.destacado).toLowerCase() === 'true' || r.featured === true,
       likes: Math.max(0, Number(r.likes) || 0),
       dislikes: Math.max(0, Number(r.dislikes) || 0)
     };
@@ -229,7 +229,7 @@ main.noHero{padding-top:110px}
   const inView = v => {
     if (state.view === 'inicio') return true;
     if (state.view === 'milista') return state.list.includes(v.id);
-    return cats(v).some(c => CATS[state.view].includes(c));
+    return cats(v).some(c => CATS[state.view] && CATS[state.view].includes(c));
   };
   const filtered = () => {
     const q = norm(state.q);
@@ -278,12 +278,12 @@ main.noHero{padding-top:110px}
     const list = filtered();
     $('#nav').querySelectorAll('button').forEach(b => b.classList.toggle('active', b.dataset.v === state.view));
     renderHero(list);
-    $('#secTitle').textContent = state.q ? 'Resultados' : TITLES[state.view];
+    $('#secTitle').textContent = state.q ? 'Resultados' : (TITLES[state.view] || 'Catálogo');
     $('#secTitle').style.display = list.length ? '' : 'none';
     const empty = $('#empty');
     if (!list.length) {
       $('#grid').innerHTML = '';
-      const msg = !state.items.length ? 'Sin contenido' : 'Opps... no pudimos encontrar nada con ese nombre. Prueba a escribirlo otra vez, vaya que te equivocaste.';
+      const msg = !state.items.length ? 'Sin contenido' : 'Opps... no pudimos encontrar nada con ese nombre. Prueba a escribirlo otra vez.';
       empty.innerHTML = `<div class="empty"><div class="ico">${SAD}</div><p>${msg}</p></div>`;
       return;
     }
@@ -393,15 +393,18 @@ main.noHero{padding-top:110px}
   $('#brand').addEventListener('click', () => { state.view = 'inicio'; state.q = ''; $('#q').value = ''; state.hero = 0; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
   $('#q').addEventListener('input', e => { state.q = e.target.value; state.hero = 0; render(); });
 
-  /* ---------- Carga silenciosa ---------- */
+  /* ---------- Carga e inicialización ---------- */
   async function init() {
     try {
-      const res = await fetch('./videos.json', { cache: 'no-cache' });
-      if (!res.ok) throw 0;
+      const res = await fetch('./videos.json?v=' + Date.now());
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
       const data = await res.json();
       const arr = Array.isArray(data) ? data : (Array.isArray(data && data.videos) ? data.videos : []);
       state.items = arr.map(normalize).filter(Boolean);
-    } catch { state.items = []; }
+    } catch (err) {
+      console.error('Error al cargar videos.json:', err);
+      state.items = [];
+    }
     state.list = state.list.filter(id => state.items.some(v => v.id === id));
     render();
   }
