@@ -196,14 +196,16 @@ main.noHero{padding-top:110px}
     if (!r || typeof r !== 'object') return null;
     const id = String(r.carpet ?? r.carpeta ?? r.id ?? '').trim();
     if (!id) return null;
+    const catVal = r.category ?? r.categoria ?? r.categoría ?? '';
+    const isIaCategory = Array.isArray(catVal) ? catVal.some(c => norm(c) === 'ia') : norm(catVal) === 'ia';
     return {
       id,
       title: r.tittle ?? r.title ?? r.titulo ?? r.título ?? id,
       desc: r.description ?? r.descripcion ?? r.descripción ?? '',
       age: r.age ?? r.edad ?? '',
       duration: r.duration ?? r.duracion ?? r.duración ?? '',
-      cat: r.category ?? r.categoria ?? r.categoría ?? '',
-      isIA: r.ia === true || r.ia === 'true' || norm(r.category ?? r.categoria ?? r.categoría ?? '') === 'ia',
+      cat: catVal,
+      isIA: r.ia === true || r.ia === 'true' || isIaCategory,
       feat: r.destacado === true || r.destacado === 'true' || r.featured === true,
       likes: Math.max(0, Number(r.likes) || 0),
       dislikes: Math.max(0, Number(r.dislikes) || 0)
