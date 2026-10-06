@@ -5,10 +5,11 @@
     "description": "En la isla de Alkatrán, unos antiguos piratas dejaron restos de sus preciosidades en lo más oculto del universo.",
     "age": "0+",
     "duration": "1m",
-    "category": "trailer",
+    "category": ["trailer", "originales"],
     "destacado": true,
     "likes": 1,
     "dislikes": 0,
     "ia": true
+    "ia_description": Este trailer incluye videos animados hechos por IA, y algunos logotipos.
   }
 ]
