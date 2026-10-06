@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ComicAlais Max</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<meta name="theme-color" content="#0b0b12">
+<style>
+:root{
+  --bg:#0b0b12; --bg2:#020205; --glass:rgba(255,255,255,.06); --glass-b:rgba(255,255,255,.12);
+  --p:#8b2fff; --m:#e02fd0; --txt:#f3f3f8; --mut:#a3a3b8;
+  --grad:linear-gradient(135deg,#8b2fff,#e02fd0);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:radial-gradient(1200px 600px at 80% -10%,#1a0f33 0%,transparent 60%),linear-gradient(180deg,var(--bg),var(--bg2));background-attachment:fixed;color:var(--txt);min-height:100vh;overflow-x:hidden}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+img{display:block}
+
+/* HEADER */
+header{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:12px 4%;background:rgba(11,11,18,.55);backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);border-bottom:1px solid var(--glass-b)}
+.brand{display:flex;align-items:center;gap:10px;flex-shrink:0;cursor:pointer;user-select:none}
+.brand img{width:34px;height:34px;object-fit:contain;border-radius:8px}
+.brand span{font-weight:800;font-size:1.25rem;letter-spacing:.3px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;white-space:nowrap}
+.right{display:flex;align-items:center;gap:22px;min-width:0}
+nav{display:flex;gap:6px}
+nav button{padding:8px 14px;border-radius:999px;color:var(--mut);font-weight:600;font-size:.92rem;white-space:nowrap;transition:.2s}
+nav button:hover{color:#fff;background:var(--glass)}
+nav button.active{color:#fff;background:var(--grad);box-shadow:0 4px 18px rgba(139,47,255,.4)}
+.search{display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:var(--glass);border:1px solid var(--glass-b);width:230px;transition:.25s}
+.search:focus-within{border-color:var(--p);box-shadow:0 0 0 3px rgba(139,47,255,.25);width:290px}
+.search svg{width:18px;height:18px;flex-shrink:0;stroke:var(--mut)}
+.search input{flex:1;min-width:0;background:none;border:0;outline:0;color:var(--txt);font:inherit;font-size:.92rem}
+.search input::placeholder{color:var(--mut)}
+
+/* HERO */
+#hero{position:relative;height:78vh;min-height:460px;max-height:760px;overflow:hidden;display:none}
+#hero.on{display:block}
+.slide{position:absolute;inset:0;opacity:0;transition:opacity .9s;pointer-events:none}
+.slide.on{opacity:1;pointer-events:auto}
+.slide .bg{position:absolute;inset:0;background:linear-gradient(135deg,#25104a,#4a0f46)}
+.slide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.slide::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(11,11,18,.92) 0%,rgba(11,11,18,.45) 45%,transparent 75%),linear-gradient(0deg,var(--bg) 0%,transparent 40%)}
+.hero-info{position:absolute;z-index:2;left:4%;bottom:14%;max-width:560px;display:flex;flex-direction:column;gap:14px}
+.tag{align-self:flex-start;padding:4px 12px;border-radius:999px;background:var(--grad);font-size:.72rem;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.hero-info h1{font-size:clamp(1.8rem,4.5vw,3.4rem);line-height:1.05;font-weight:800;text-shadow:0 4px 24px rgba(0,0,0,.6)}
+.meta{display:flex;flex-wrap:wrap;align-items:center;gap:10px;color:var(--mut);font-size:.9rem}
+.badge{padding:2px 8px;border:1px solid var(--glass-b);border-radius:6px;background:var(--glass);color:var(--txt);font-size:.8rem;font-weight:600}
+.pos{color:#7dffb0;font-weight:600}
+.hero-info p{color:#d5d5e4;line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:999px;font-weight:700;transition:.2s}
+.btn svg{width:18px;height:18px}
+.btn.primary{background:var(--grad);box-shadow:0 8px 26px rgba(139,47,255,.45)}
+.btn.primary:hover{transform:translateY(-2px);filter:brightness(1.1)}
+.btn.glass{background:var(--glass);border:1px solid var(--glass-b);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.btn.glass:hover{background:rgba(255,255,255,.14)}
+.btn.glass.active{border-color:var(--m);color:#ff8cf0}
+.dots{position:absolute;z-index:3;right:4%;bottom:14%;display:flex;gap:8px}
+.dots button{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.35);transition:.25s}
+.dots button.on{width:26px;border-radius:6px;background:var(--grad)}
+
+/* CATALOG */
+main{padding:0 4% 60px}
+main.noHero{padding-top:110px}
+.sec-title{font-size:1.35rem;font-weight:700;margin:26px 0 18px}
+#grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:20px}
+.card{position:relative;aspect-ratio:2/3;border-radius:14px;overflow:hidden;cursor:pointer;background:linear-gradient(160deg,#241046,#3d0f3a);border:1px solid var(--glass-b);transition:transform .3s,box-shadow .3s,border-color .3s}
+.card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.card .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:14px;text-align:center;font-weight:700;color:var(--mut)}
+.card:hover{transform:translateY(-6px) scale(1.04);box-shadow:0 18px 40px rgba(139,47,255,.4);border-color:var(--p);z-index:2}
+.card:hover img{transform:scale(1.08)}
+.ov{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;gap:6px;padding:12px;background:linear-gradient(0deg,rgba(2,2,5,.95) 0%,rgba(2,2,5,.35) 50%,transparent 75%);opacity:0;transition:.3s}
+.card:hover .ov,.card:focus-visible .ov{opacity:1}
+.ov h3{font-size:.95rem;line-height:1.2}
+.ov .meta{font-size:.75rem;gap:6px}
+.ov-row{display:flex;gap:8px;align-items:center}
+.circ{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--glass);border:1px solid var(--glass-b);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);transition:.2s}
+.circ svg{width:16px;height:16px}
+.circ:hover{background:rgba(255,255,255,.2)}
+.circ.play{background:var(--grad);border:0}
+.circ.on{border-color:var(--m);color:#ff8cf0}
+@media (hover:none){.ov{opacity:1;background:linear-gradient(0deg,rgba(2,2,5,.9) 0%,transparent 45%)}.ov .meta,.ov-row{display:none}}
+
+/* EMPTY */
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;text-align:center;padding:70px 20px 40px;max-width:520px;margin:0 auto}
+.empty .ico{width:120px;height:120px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--glass);border:1px solid var(--glass-b);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.empty svg{width:72px;height:72px}
+.empty p{color:var(--mut);font-size:1.05rem;line-height:1.55}
+
+/* MODAL */
+#modal{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(2,2,5,.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+#modal.on{display:flex}
+.box{width:min(980px,100%);max-height:94vh;overflow:auto;border-radius:20px;background:rgba(18,18,30,.92);border:1px solid var(--glass-b);box-shadow:0 30px 90px rgba(0,0,0,.7);animation:pop .3s ease}
+@keyframes pop{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:none}}
+.vwrap{position:relative;background:#000;aspect-ratio:16/9}
+.vwrap video{width:100%;height:100%;display:block;background:#000}
+.x{position:absolute;top:12px;right:12px;z-index:3;width:38px;height:38px;border-radius:50%;background:rgba(0,0,0,.55);border:1px solid var(--glass-b);display:flex;align-items:center;justify-content:center;font-size:1.3rem;transition:.2s}
+.x:hover{background:var(--grad)}
+.minfo{padding:22px 26px 28px;display:flex;flex-direction:column;gap:14px}
+.minfo h2{font-size:1.6rem;line-height:1.15}
+.minfo p{color:#d5d5e4;line-height:1.6}
+.vote{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.vbtn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;background:var(--glass);border:1px solid var(--glass-b);font-weight:600;transition:.2s}
+.vbtn svg{width:18px;height:18px}
+.vbtn:hover{background:rgba(255,255,255,.14)}
+.vbtn.on.like{border-color:#46e08a;color:#7dffb0;background:rgba(70,224,138,.12)}
+.vbtn.on.dis{border-color:#ff5c7a;color:#ff8aa0;background:rgba(255,92,122,.12)}
+.score{margin-left:auto;font-weight:700}
+.score.none{color:var(--mut)}
+
+@media (max-width:860px){
+  header{flex-wrap:wrap;row-gap:10px;padding:10px 4%}
+  .right{width:100%;flex-direction:column-reverse;align-items:stretch;gap:10px}
+  .search,.search:focus-within{width:100%}
+  nav{overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+  nav::-webkit-scrollbar{display:none}
+  #hero{height:70vh}
+  main.noHero{padding-top:150px}
+  .hero-info{bottom:12%}
+  .dots{bottom:5%;right:50%;transform:translateX(50%)}
+}
+@media (max-width:520px){
+  #grid{grid-template-columns:repeat(2,1fr);gap:12px}
+  .minfo{padding:18px}
+  .score{margin-left:0;width:100%}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand" id="brand">
+    <img src="favicon.png" alt="" onerror="this.style.display='none'">
+    <span>ComicAlais Max</span>
+  </div>
+  <div class="right">
+    <nav id="nav">
+      <button data-v="inicio" class="active">Inicio</button>
+      <button data-v="peliculas">Películas</button>
+      <button data-v="series">Series</button>
+      <button data-v="originales">Originales</button>
+      <button data-v="ninos">Niños</button>
+      <button data-v="milista">Mi Lista</button>
+    </nav>
+    <label class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Buscar..." autocomplete="off" aria-label="Buscar">
+    </label>
+  </div>
+</header>
+
+<section id="hero"></section>
+<main id="main">
+  <h2 class="sec-title" id="secTitle"></h2>
+  <div id="grid"></div>
+  <div id="empty"></div>
+</main>
+
+<div id="modal" role="dialog" aria-modal="true">
+  <div class="box" id="box"></div>
+</div>
+
+<script>
+(() => {
+  const $ = s => document.querySelector(s);
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const norm = s => String(s ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+  const load = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v ?? d; } catch { return d; } };
+  const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+
+  const state = { items: [], view: 'inicio', q: '', list: load('cam_list', []), votes: load('cam_votes', {}), hero: 0, timer: null, current: null };
+
+  const CATS = {
+    peliculas: ['pelicula','peliculas','movie','movies','film','films'],
+    series: ['serie','series','show','shows'],
+    originales: ['original','originales','originals'],
+    ninos: ['nino','ninos','kids','kid','infantil','infantiles','familia']
+  };
+  const TITLES = { inicio:'Catálogo', peliculas:'Películas', series:'Series', originales:'Originales', ninos:'Niños', milista:'Mi Lista' };
+
+  const I = {
+    play:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>',
+    plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+    check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+    up:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11v9H4v-9zM7 11l4-8c1.7 0 2.5 1.2 2.2 2.8L12.6 9H19a2 2 0 012 2.3l-1.4 7A2 2 0 0117.6 20H7"/></svg>',
+    down:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 13V4h3v9zM17 13l-4 8c-1.7 0-2.5-1.2-2.2-2.8l.6-3.2H5a2 2 0 01-2-2.3l1.4-7A2 2 0 016.4 4H17"/></svg>'
+  };
+
+  /* ---------- Datos ---------- */
+  const normalize = r => {
+    if (!r || typeof r !== 'object') return null;
+    const id = String(r.carpet ?? r.carpeta ?? r.id ?? '').trim();
+    if (!id) return null;
+    return {
+      id,
+      title: r.tittle ?? r.title ?? r.titulo ?? r.título ?? id,
+      desc: r.description ?? r.descripcion ?? r.descripción ?? '',
+      age: r.age ?? r.edad ?? '',
+      duration: r.duration ?? r.duracion ?? r.duración ?? '',
+      cat: r.category ?? r.categoria ?? r.categoría ?? '',
+      feat: r.destacado === true || r.destacado === 'true' || r.featured === true,
+      likes: Math.max(0, Number(r.likes) || 0),
+      dislikes: Math.max(0, Number(r.dislikes) || 0)
+    };
+  };
+  const cats = v => (Array.isArray(v.cat) ? v.cat : String(v.cat).split(/[,;/|]/)).map(norm).filter(Boolean);
+  const imgH = v => `videos/${encodeURIComponent(v.id)}/portada_horizontal.png`;
+  const imgV = v => `videos/${encodeURIComponent(v.id)}/portada_vertical.png`;
+  const vidSrc = v => `videos/${encodeURIComponent(v.id)}/video.mp4`;
+
+  const stats = v => {
+    const mine = state.votes[v.id];
+    const l = v.likes + (mine === 'like' ? 1 : 0);
+    const d = v.dislikes + (mine === 'dislike' ? 1 : 0);
+    const t = l + d;
+    return { l, d, t, pct: t ? Math.round(l / t * 100) : null };
+  };
+  const scoreHTML = v => { const s = stats(v); return s.pct === null ? '<span class="score none">Sin votos</span>' : `<span class="pos">${s.pct}% Positivo</span>`; };
+
+  /* ---------- Filtrado ---------- */
+  const inView = v => {
+    if (state.view === 'inicio') return true;
+    if (state.view === 'milista') return state.list.includes(v.id);
+    return cats(v).some(c => CATS[state.view].includes(c));
+  };
+  const filtered = () => {
+    const q = norm(state.q);
+    return state.items.filter(v => inView(v) && (!q || norm(v.title).includes(q) || norm(v.desc).includes(q) || norm(v.cat).includes(q)));
+  };
+
+  /* ---------- Render ---------- */
+  const metaHTML = v => `${v.age ? `<span class="badge">${esc(v.age)}</span>` : ''}${v.duration ? `<span>${esc(v.duration)}</span>` : ''}${scoreHTML(v)}`;
+
+  function renderHero(list) {
+    const hero = $('#hero');
+    const feats = state.q ? [] : list.filter(v => v.feat);
+    clearInterval(state.timer);
+    if (!feats.length) { hero.className = ''; hero.innerHTML = ''; $('#main').className = 'noHero'; return; }
+    hero.className = 'on'; $('#main').className = '';
+    if (state.hero >= feats.length) state.hero = 0;
+    hero.innerHTML = feats.map((v, i) => `
+      <div class="slide ${i === state.hero ? 'on' : ''}" data-i="${i}">
+        <div class="bg"></div>
+        <img src="${imgH(v)}" alt="" onerror="this.style.display='none'">
+        <div class="hero-info">
+          <span class="tag">Destacado</span>
+          <h1>${esc(v.title)}</h1>
+          <div class="meta">${metaHTML(v)}</div>
+          <p>${esc(v.desc)}</p>
+          <div class="btns">
+            <button class="btn primary" data-act="play" data-id="${esc(v.id)}">${I.play} Reproducir</button>
+            <button class="btn glass ${state.list.includes(v.id) ? 'active' : ''}" data-act="list" data-id="${esc(v.id)}">${state.list.includes(v.id) ? I.check : I.plus} Mi Lista</button>
+          </div>
+        </div>
+      </div>`).join('') +
+      (feats.length > 1 ? `<div class="dots">${feats.map((_, i) => `<button data-dot="${i}" class="${i === state.hero ? 'on' : ''}" aria-label="Destacado ${i + 1}"></button>`).join('')}</div>` : '');
+    if (feats.length > 1) state.timer = setInterval(() => { state.hero = (state.hero + 1) % feats.length; setSlide(); }, 8000);
+  }
+  function setSlide() {
+    document.querySelectorAll('.slide').forEach((s, i) => s.classList.toggle('on', i === state.hero));
+    document.querySelectorAll('.dots button').forEach((d, i) => d.classList.toggle('on', i === state.hero));
+  }
+
+  const SAD = `<svg viewBox="0 0 72 72" fill="none" stroke="url(#g)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8b2fff"/><stop offset="1" stop-color="#e02fd0"/></linearGradient></defs>
+    <circle cx="36" cy="36" r="30"/><circle cx="26" cy="30" r="2.5" fill="url(#g)"/><circle cx="46" cy="30" r="2.5" fill="url(#g)"/>
+    <path d="M25 50c3-5 9-7 11-7s8 2 11 7"/><path d="M50 36c0 3 3 4 3 6.5a3 3 0 01-6 0c0-2.5 3-3.5 3-6.5z" stroke-width="2"/></svg>`;
+
+  function render() {
+    const list = filtered();
+    $('#nav').querySelectorAll('button').forEach(b => b.classList.toggle('active', b.dataset.v === state.view));
+    renderHero(list);
+    $('#secTitle').textContent = state.q ? 'Resultados' : TITLES[state.view];
+    $('#secTitle').style.display = list.length ? '' : 'none';
+    const empty = $('#empty');
+    if (!list.length) {
+      $('#grid').innerHTML = '';
+      const msg = !state.items.length ? 'Sin contenido' : 'Opps... no pudimos encontrar nada con ese nombre. Prueba a escribirlo otra vez, vaya que te equivocaste.';
+      empty.innerHTML = `<div class="empty"><div class="ico">${SAD}</div><p>${msg}</p></div>`;
+      return;
+    }
+    empty.innerHTML = '';
+    $('#grid').innerHTML = list.map(v => {
+      const inL = state.list.includes(v.id);
+      return `<article class="card" tabindex="0" data-act="open" data-id="${esc(v.id)}">
+        <div class="ph">${esc(v.title)}</div>
+        <img src="${imgV(v)}" alt="${esc(v.title)}" loading="lazy" onerror="this.style.display='none'">
+        <div class="ov">
+          <h3>${esc(v.title)}</h3>
+          <div class="meta">${metaHTML(v)}</div>
+          <div class="ov-row">
+            <button class="circ play" data-act="play" data-id="${esc(v.id)}" aria-label="Reproducir">${I.play}</button>
+            <button class="circ ${inL ? 'on' : ''}" data-act="list" data-id="${esc(v.id)}" aria-label="Mi Lista">${inL ? I.check : I.plus}</button>
+          </div>
+        </div>
+      </article>`;
+    }).join('');
+  }
+
+  /* ---------- Acciones ---------- */
+  const find = id => state.items.find(v => v.id === id);
+  function toggleList(id) {
+    const i = state.list.indexOf(id);
+    i >= 0 ? state.list.splice(i, 1) : state.list.push(id);
+    save('cam_list', state.list);
+    render();
+    if (state.current) paintModalActions();
+  }
+  function vote(id, type) {
+    state.votes[id] === type ? delete state.votes[id] : (state.votes[id] = type);
+    save('cam_votes', state.votes);
+    paintModalActions();
+    render();
+  }
+
+  /* ---------- Modal ---------- */
+  function openModal(id) {
+    const v = find(id); if (!v) return;
+    state.current = v;
+    $('#box').innerHTML = `
+      <div class="vwrap">
+        <button class="x" data-act="close" aria-label="Cerrar">&times;</button>
+        <video id="player" controls controlsList="nodownload noremoteplayback" disablePictureInPicture playsinline preload="metadata" poster="${imgH(v)}"></video>
+      </div>
+      <div class="minfo">
+        <h2>${esc(v.title)}</h2>
+        <div class="meta">${v.age ? `<span class="badge">${esc(v.age)}</span>` : ''}${v.duration ? `<span>${esc(v.duration)}</span>` : ''}${v.cat ? `<span>${esc(Array.isArray(v.cat) ? v.cat.join(' · ') : v.cat)}</span>` : ''}</div>
+        <p>${esc(v.desc)}</p>
+        <div class="vote" id="mActs"></div>
+      </div>`;
+    const p = $('#player');
+    p.addEventListener('contextmenu', e => e.preventDefault());
+    p.src = vidSrc(v);
+    paintModalActions();
+    $('#modal').classList.add('on');
+    document.body.style.overflow = 'hidden';
+    p.play().catch(() => {});
+  }
+  function paintModalActions() {
+    const v = state.current; if (!v) return;
+    const mine = state.votes[v.id], s = stats(v), inL = state.list.includes(v.id);
+    $('#mActs').innerHTML = `
+      <button class="vbtn like ${mine === 'like' ? 'on' : ''}" data-act="like">${I.up} ${s.l}</button>
+      <button class="vbtn dis ${mine === 'dislike' ? 'on' : ''}" data-act="dislike">${I.down} ${s.d}</button>
+      <button class="vbtn ${inL ? 'on like' : ''}" data-act="list">${inL ? I.check : I.plus} Mi Lista</button>
+      ${s.pct === null ? '<span class="score none">Sin votos</span>' : `<span class="score pos">${s.pct}% Positivo</span>`}`;
+  }
+  function closeModal() {
+    const p = $('#player');
+    if (p) { p.pause(); p.removeAttribute('src'); p.load(); }
+    $('#modal').classList.remove('on');
+    $('#box').innerHTML = '';
+    document.body.style.overflow = '';
+    state.current = null;
+  }
+
+  /* ---------- Eventos ---------- */
+  document.addEventListener('click', e => {
+    const dot = e.target.closest('[data-dot]');
+    if (dot) { state.hero = +dot.dataset.dot; setSlide(); return; }
+    const t = e.target.closest('[data-act]');
+    if (t) {
+      e.stopPropagation();
+      const act = t.dataset.act, id = t.dataset.id || (state.current && state.current.id);
+      if (act === 'open' || act === 'play') return openModal(id);
+      if (act === 'list') return toggleList(id);
+      if (act === 'like' || act === 'dislike') return vote(id, act);
+      if (act === 'close') return closeModal();
+    }
+    if (e.target.id === 'modal') closeModal();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && state.current) closeModal();
+    if (e.key === 'Enter' && e.target.classList && e.target.classList.contains('card')) openModal(e.target.dataset.id);
+  });
+  $('#nav').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    state.view = b.dataset.v; state.hero = 0; render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  $('#brand').addEventListener('click', () => { state.view = 'inicio'; state.q = ''; $('#q').value = ''; state.hero = 0; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+  $('#q').addEventListener('input', e => { state.q = e.target.value; state.hero = 0; render(); });
+
+  /* ---------- Carga silenciosa ---------- */
+  async function init() {
+    try {
+      const res = await fetch('./videos.json', { cache: 'no-cache' });
+      if (!res.ok) throw 0;
+      const data = await res.json();
+      const arr = Array.isArray(data) ? data : (Array.isArray(data && data.videos) ? data.videos : []);
+      state.items = arr.map(normalize).filter(Boolean);
+    } catch { state.items = []; }
+    state.list = state.list.filter(id => state.items.some(v => v.id === id));
+    render();
+  }
+  init();
+})();
+</script>
+</body>
+</html>
