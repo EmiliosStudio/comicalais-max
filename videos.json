@@ -2,13 +2,13 @@
   {
     "carpet": "001",
     "tittle": "El tesoro de Alkatrán: Trailer oficial",
-    "description": "En la isla de Alkatrán, unos antiguos piratas dejaron restos de sus preciosidades en lo más oculto del universo. Pero Esteban, un joven soñador, va en busca de nuevos caminos. ¿Quieres conocer qué es lo más oculto?",
+    "description": "En la isla de Alkatrán, unos antiguos piratas dejaron restos de sus preciosidades en lo más oculto del universo.",
     "age": "0+",
     "duration": "1m",
-    "category": "trailers",
+    "category": "trailer",
     "destacado": true,
-    "likes": 0,
-    "dislikes": 0
+    "likes": 1,
+    "dislikes": 0,
     "ia": true
   }
 ]
