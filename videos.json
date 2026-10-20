@@ -2,14 +2,23 @@
   {
     "carpet": "001",
     "tittle": "El tesoro de Alkatrán: Trailer oficial",
-    "description": "En la isla de Alkatrán, unos antiguos piratas dejaron restos de sus preciosidades en lo más oculto del universo.",
+    "description": "En la isla de Alkatrán, unos antiguos piratas dejaron restos de sus preciosidades en lo más oculto del universo. Pero Esteban, un joven soñador, va en busca de nuevos caminos. ¿Quieres conocer qué es lo más oculto?",
     "age": "0+",
     "duration": "1m",
-    "category": ["trailer", "originales"],
+    "category": "trailer",
     "destacado": true,
     "likes": 1,
-    "dislikes": 0,
-    "ia": true,
-    "ia_description": "Este trailer incluye videos animados hechos por IA, y algunos logotipos."
+    "dislikes": 0
+  },
+  {
+    "carpet": "002",
+    "tittle": "La película de Minecraft",
+    "description": "Descubre la película de Minecraft resumida",
+    "age": "7+",
+    "duration": "20m",
+    "category": "peliculas",
+    "destacado": true,
+    "likes": 0,
+    "dislikes": 0
   }
 ]
