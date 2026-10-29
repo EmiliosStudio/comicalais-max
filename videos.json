@@ -8,7 +8,8 @@
     "category": "trailer",
     "destacado": true,
     "likes": 1,
-    "dislikes": 0
+    "dislikes": 0,
+    "videoUrl": ""
   },
   {
     "carpet": "002",
@@ -17,8 +18,9 @@
     "age": "7+",
     "duration": "20m",
     "category": "peliculas",
-    "destacado": true,
+    "destacado": false,
     "likes": 0,
-    "dislikes": 0
+    "dislikes": 0,
+    "videoUrl": "https://dai.ly/kbkmiq6Qx6MuSTMaUVU"
   }
 ]
